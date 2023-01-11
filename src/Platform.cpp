@@ -28,7 +28,7 @@ Platform::Platform(char const *title, int windowWidth, int windowHeight) {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cerr << "SDL could not be initialized!" << std::endl
                   << "SDL_Error: " << SDL_GetError() << std::endl;
-        exit(1);
+        std::exit(EXIT_FAILURE);
     }
 
     window = SDL_CreateWindow(
@@ -39,7 +39,7 @@ Platform::Platform(char const *title, int windowWidth, int windowHeight) {
 
     if (window == nullptr) {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-        exit(2);
+        std::exit(EXIT_FAILURE);
     }
 
     // Create renderer
@@ -78,7 +78,7 @@ bool Platform::ProcessInput(uint8_t *keys) {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) {
-            exit(0);
+            std::exit(EXIT_SUCCESS);
         }
 
         for (int i = 0; i < 16; ++i) {

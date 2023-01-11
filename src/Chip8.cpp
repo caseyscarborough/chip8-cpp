@@ -614,7 +614,7 @@ void Chip8::op_Fx65() {
 
 void Chip8::op_null() {
     std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
-    exit(3);
+    std::exit(EXIT_FAILURE);
 }
 
 //endregion

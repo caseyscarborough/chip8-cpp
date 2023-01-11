@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
     bool loaded = chip8.LoadRom(romFilename);
     if (!loaded) {
-        return 2;
+        std::exit(EXIT_FAILURE);
     }
 
     // Emulation loop
