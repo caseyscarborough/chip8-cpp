@@ -36,6 +36,10 @@ private:
 
     //region Instructions
 
+    uint8_t Vx();   // get Vx
+    uint8_t Vy();   // get Vy
+    uint8_t kk();   // get kk
+    uint16_t nnn(); // get nnn
     void op_00E0(); // CLS - clears the display
     void op_00EE(); // RET - return from a subroutine
     void op_1nnn(); // JP addr - jump to location nnn
