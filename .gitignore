@@ -6,6 +6,8 @@ thirdparty/
 
 # Cmake
 cmake-build-debug
+cmake
+build
 
 # Chip 8 Roms
 *.ch8

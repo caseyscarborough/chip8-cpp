@@ -13,9 +13,10 @@ const int VIDEO_WIDTH = 64;
 class Chip8 {
 public:
     Chip8();
-    void LoadRom(char const* filename);
+    bool LoadRom(char const* filename);
     void Cycle();
 
+    bool drawFlag;
     uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{};
     uint8_t keypad[KEY_COUNT]{};
 private:
