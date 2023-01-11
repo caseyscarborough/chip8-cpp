@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <fstream>
+#include <cstring>
 
 // The Chip8’s memory from 0x000 to 0x1FF is reserved
 // so the ROM instructions must start at 0x200.
