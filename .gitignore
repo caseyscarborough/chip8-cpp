@@ -1,0 +1,11 @@
+# Third party
+thirdparty/
+
+# CLion
+.idea/
+
+# Cmake
+cmake-build-debug
+
+# Chip 8 Roms
+*.ch8
