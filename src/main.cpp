@@ -1,5 +1,5 @@
-#include "Chip8.h"
-#include "Platform.h"
+#include "chip8.h"
+#include "platform.h"
 #include <iostream>
 #include <thread>
 

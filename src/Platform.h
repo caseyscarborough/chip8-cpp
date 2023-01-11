@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <SDL2/SDL.h>
-#include "Chip8.h"
+#include "chip8.h"
 
 class Platform
 {

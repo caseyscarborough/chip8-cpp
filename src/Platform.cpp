@@ -1,6 +1,6 @@
-#include "Platform.h"
+#include "platform.h"
 #include "SDL2/SDL.h"
-#include "Chip8.h"
+#include "chip8.h"
 #include <iostream>
 
 // Keypad keymap

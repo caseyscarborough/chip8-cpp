@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 project(chip8)
 
 set(CMAKE_CXX_STANDARD 17)
-set(SOURCES src/main.cpp src/Chip8.cpp src/Platform.cpp)
+set(SOURCES src/main.cpp src/chip8.cpp src/platform.cpp)
 
 include_directories(/opt/homebrew/include)
 
