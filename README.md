@@ -18,10 +18,8 @@ brew install cmake make sdl2
 ## Building
 
 ```bash
-mkdir build
-cd build
-cmake ..
-make .
+mkdir build && cd build
+cmake .. && make
 ```
 
 ## Running
