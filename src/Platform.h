@@ -11,9 +11,9 @@ public:
     ~Platform();
     void update(const uint32_t buffer[]);
     bool process_input(uint8_t* keys);
-    SDL_Renderer* renderer{};
-    SDL_Texture* texture{};
-    uint32_t pixels[VIDEO_WIDTH * VIDEO_HEIGHT]{};
 private:
+    uint32_t pixels[VIDEO_WIDTH * VIDEO_HEIGHT]{};
+    SDL_Texture* texture{};
+    SDL_Renderer* renderer{};
     SDL_Window* window{};
 };
