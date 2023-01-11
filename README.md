@@ -31,12 +31,12 @@ make .
 ./chip8 <scale> <delay> <rom>
 
 # Example
-./chip8 20 1 Tetris.ch8
+./chip8 20 3 ../roms/Tetris.ch8
 ```
 
 ## ROMs
 
-ROMs can be found [here](https://github.com/kripod/chip8-roms).
+ROMs can be found in the `roms` directory or [here](https://github.com/kripod/chip8-roms).
 
 ## References
 
