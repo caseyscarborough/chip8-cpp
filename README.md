@@ -34,6 +34,35 @@ make .
 ./chip8 20 3 ../roms/Tetris.ch8
 ```
 
+## Playing Games
+
+Chip-8 has a 16-key keypad. The following keys used for emulating the keypad:
+
+|   |   |   |   |
+|---|---|---|---|
+|`1`|`2`|`3`|`4`|
+|`Q`|`W`|`E`|`R`|
+|`A`|`S`|`D`|`F`|
+|`Z`|`X`|`C`|`V`|
+
+Each game is different so try different keys to determine what each one does. Here are some I know off hand:
+
+- Space Invaders
+  - `Q` - move left
+  - `W` - shoot
+  - `E` - move right
+- Tetris
+  - `Q` - flip piece
+  - `W` - move piece left
+  - `E` - move piece right
+- Pong
+  - `1` - move left paddle up
+  - `Q` - move left paddle down
+  - `4` - move right paddle up
+  - `R` - move right paddle down
+
+You can press Escape to quit the emulator.
+
 ## ROMs
 
 ROMs can be found in the `roms` directory or [here](https://github.com/kripod/chip8-roms).
