@@ -1,7 +1,7 @@
 #include "Chip8.h"
 #include <iostream>
-#include <fstream>
 #include <chrono>
+#include <fstream>
 
 // The Chip8’s memory from 0x000 to 0x1FF is reserved
 // so the ROM instructions must start at 0x200.
@@ -9,9 +9,6 @@ const unsigned int START_ADDRESS = 0x200;
 
 // There are 16 different (0-F) 5-byte fonts.
 const unsigned int FONTSET_SIZE = 80;
-
-// Fonts are loaded into memory starting at address 0x50.
-const unsigned int FONTSET_START_ADDRESS = 0x50;
 
 // Each character sprite is 5 bytes, and each bit represents a pixel.
 // Each bit represents a pixel, where 1 is on, and 0 is off.
@@ -77,50 +74,29 @@ Chip8::Chip8() : randGen(std::chrono::system_clock::now().time_since_epoch().cou
 }
 
 bool Chip8::LoadRom(const char *filename) {
-    printf("Loading ROM: %s\n", filename);
+    // Open the file as a stream of binary and move the file pointer to the end
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
-    // Open ROM file
-    FILE* rom = fopen(filename, "rb");
-    if (rom == NULL) {
-        std::cerr << "Failed to open ROM" << std::endl;
+    if (!file.is_open()) {
+        std::cerr << "Couldn't open file " << filename << std::endl;
         return false;
     }
+    // Get size of file and allocate a buffer to hold the contents
+    std::streampos size = file.tellg();
+    char *buffer = new char[size];
 
-    // Get file size
-    fseek(rom, 0, SEEK_END);
-    long rom_size = ftell(rom);
-    rewind(rom);
+    // Go back to the beginning of the file and fill the buffer
+    file.seekg(0, std::ios::beg);
+    file.read(buffer, size);
+    file.close();
 
-    // Allocate memory to store rom
-    char* rom_buffer = (char*) malloc(sizeof(char) * rom_size);
-    if (rom_buffer == NULL) {
-        std::cerr << "Failed to allocate memory for ROM" << std::endl;
-        return false;
+    // Load the ROM contents into the Chip8's memory, starting at 0x200
+    for (long i = 0; i < size; ++i) {
+        memory[START_ADDRESS + i] = buffer[i];
     }
 
-    // Copy ROM into buffer
-    size_t result = fread(rom_buffer, sizeof(char), (size_t)rom_size, rom);
-    if (result != rom_size) {
-        std::cerr << "Failed to read ROM" << std::endl;
-        return false;
-    }
-
-    // Copy buffer to memory
-    if ((4096-512) > rom_size){
-        for (int i = 0; i < rom_size; ++i) {
-            memory[i + 512] = (uint8_t)rom_buffer[i];   // Load into memory starting
-            // at 0x200 (=512)
-        }
-    }
-    else {
-        std::cerr << "ROM too large to fit in memory" << std::endl;
-        return false;
-    }
-
-    // Clean up
-    fclose(rom);
-    free(rom_buffer);
-
+    // Free the buffer
+    delete[] buffer;
     return true;
 }
 
@@ -130,12 +106,8 @@ void Chip8::Cycle() {
     opcode = memory[pc] << 8 | memory[pc + 1];
     std::cout << "Executing instruction " << std::hex << opcode << std::endl;
 
-    // decode the operation and execute the correct function
-    // using the function pointer table
-    const uint16_t mask = opcode & 0xF000;
-
-    switch (mask) {
-        case 0x0000: {
+    switch (opcode & 0xF000) {
+        case 0x0000:
             switch (opcode & 0x000F) {
                 // 00E0 - Clear Screen
                 case 0x0000:
@@ -148,12 +120,12 @@ void Chip8::Cycle() {
                 default:
                     op_null();
             }
-        } break;
-        // 1NNN - Jump to address NNN
+            break;
+            // 1NNN - Jump to address NNN
         case 0x1000:
             op_1nnn();
             break;
-        // 2NNN - Call subroutine at NNN
+            // 2NNN - Call subroutine at NNN
         case 0x2000:
             op_2nnn();
             break;
@@ -172,9 +144,8 @@ void Chip8::Cycle() {
         case 0x7000:
             op_7xkk();
             break;
-        case 0x8000: {
-            const short submask = opcode & 0x000F;
-            switch (submask) {
+        case 0x8000:
+            switch (opcode & 0x000F) {
                 case 0x0000:
                     op_8xy0();
                     break;
@@ -205,7 +176,6 @@ void Chip8::Cycle() {
                 default:
                     op_null();
             }
-        }
             break;
         case 0x9000:
             op_9xy0();
@@ -222,9 +192,8 @@ void Chip8::Cycle() {
         case 0xD000:
             op_Dxyn();
             break;
-        case 0xE000: {
-            const short submask = opcode & 0x00FF;
-            switch (submask) {
+        case 0xE000:
+            switch (opcode & 0x00FF) {
                 case 0x009E:
                     op_Ex9E();
                     break;
@@ -234,11 +203,9 @@ void Chip8::Cycle() {
                 default:
                     op_null();
             }
-        }
             break;
-        case 0xF000: {
-            const short submask = opcode & 0x00FF;
-            switch (submask) {
+        case 0xF000:
+            switch (opcode & 0x00FF) {
                 case 0x0007:
                     op_Fx07();
                     break;
@@ -269,7 +236,6 @@ void Chip8::Cycle() {
                 default:
                     op_null();
             }
-        }
             break;
         default:
             op_null();
@@ -336,7 +302,6 @@ void Chip8::op_3xkk() {
 void Chip8::op_4xkk() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
     uint8_t byte = opcode & 0x00FF;
-
     if (registers[Vx] != byte) {
         pc += 4;
     } else {
@@ -411,17 +376,12 @@ void Chip8::op_8xy4() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
     uint8_t Vy = (opcode & 0x00F0) >> 4;
     registers[Vx] += registers[Vy];
-
     if (registers[Vy] > (0xFF - registers[Vx])) {
         registers[0xF] = 1;
     } else {
         registers[0xF] = 2;
     }
     pc += 2;
-    // set VF based on the sum
-    // TODO: Check this
-//    registers[0xF] = (sum > 255U ? 1 : 0);
-//    registers[Vx] = sum & 0xFF;
 }
 
 // Set Vx = Vx - Vy, set VF = NOT borrow
@@ -436,9 +396,6 @@ void Chip8::op_8xy5() {
         registers[0xF] = 1;
     }
     pc += 2;
-    // TODO: Check
-//    registers[0xF] = (registers[Vx] > registers[Vy] ? 1 : 0);
-//    registers[Vx] -= registers[Vy];
 }
 
 // Set Vx = Vx SHR 1
@@ -452,7 +409,6 @@ void Chip8::op_8xy6() {
 
     // divide by 2
     registers[Vx] >>= 1;
-
     pc += 2;
 }
 
@@ -464,7 +420,6 @@ void Chip8::op_8xy7() {
     uint8_t Vy = (opcode & 0x00F0) >> 4;
     registers[0xF] = (registers[Vy] > registers[Vx] ? 1 : 0);
     registers[Vx] = registers[Vy] - registers[Vx];
-
     pc += 2;
 }
 
@@ -479,7 +434,6 @@ void Chip8::op_8xyE() {
 
     // multiply by 2
     registers[Vx] <<= 1;
-
     pc += 2;
 }
 
@@ -524,18 +478,14 @@ void Chip8::op_Dxyn() {
     unsigned short pixel;
 
     registers[0xF] = 0;
-    for (int yline = 0; yline < height; yline++)
-    {
-        pixel = memory[index + yline];
-        for(int xline = 0; xline < 8; xline++)
-        {
-            if((pixel & (0x80 >> xline)) != 0)
-            {
-                if(video[(x + xline + ((y + yline) * 64))] == 1)
-                {
+    for (int row = 0; row < height; row++) {
+        pixel = memory[index + row];
+        for (int col = 0; col < 8; col++) {
+            if ((pixel & (0x80 >> col)) != 0) {
+                if (video[(x + col + ((y + row) * 64))] == 1) {
                     registers[0xF] = 1;
                 }
-                video[x + xline + ((y + yline) * 64)] ^= 1;
+                video[x + col + ((y + row) * 64)] ^= 1;
             }
         }
     }
@@ -616,7 +566,7 @@ void Chip8::op_Fx1E() {
 void Chip8::op_Fx29() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
     uint8_t digit = registers[Vx];
-    index =  5 * digit;
+    index = 5 * digit;
     pc += 2;
 }
 

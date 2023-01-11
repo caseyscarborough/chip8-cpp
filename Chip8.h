@@ -32,13 +32,6 @@ private:
     // 64x32 monochrome display memory
     uint16_t opcode;                     // 16-bit current instruction
 
-    typedef void (Chip8::*Chip8Func)();
-    Chip8Func table[0xF + 1];
-    Chip8Func table0[0xE + 1];
-    Chip8Func table8[0xE + 1];
-    Chip8Func tableE[0xE + 1];
-    Chip8Func tableF[0x65 + 1];
-
     std::default_random_engine randGen;
     std::uniform_int_distribution<uint8_t> randByte;
 
@@ -79,16 +72,6 @@ private:
     void op_Fx55(); // LD [I], Vx - store registers V0 through Vx in memory starting at location I
     void op_Fx65(); // LD Vx, [I] - read registers V0 through Vx from memory starting at location I
     void op_null(); // does nothing
-
-    //endregion
-
-    //region Function Pointers
-
-    void SetupTables();
-    void Table0();
-    void Table8();
-    void TableE();
-    void TableF();
 
     //endregion
 };
