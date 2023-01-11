@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(chip8)
 
+# Set variables
 set(CMAKE_CXX_STANDARD 17)
 set(SOURCES src/main.cpp src/chip8.cpp src/platform.cpp)
 
-set(CMAKE_PREFIX_PATH cmake)
+# Add SDL2 Cmake Module
+set(CMAKE_PREFIX_PATH cmake/sdl2)
 
+# Setup executable ./chip8
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Show all warnings
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+
+# Find and link SDL2
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
-
-add_executable(chip8 ${SOURCES})
-
-target_compile_options(chip8 PRIVATE -Wall)
-target_link_libraries(chip8 PRIVATE ${SDL2_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
