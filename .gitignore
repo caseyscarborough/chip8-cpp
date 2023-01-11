@@ -6,5 +6,5 @@ thirdparty/
 
 # Cmake
 cmake-build-debug
-cmake
+cmake/glfw3
 build
