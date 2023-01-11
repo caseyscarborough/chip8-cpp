@@ -2,6 +2,8 @@
 
 An implementation of a Chip-8 Emulator in C++
 
+![](https://i.imgur.com/GnFvkMD.png)
+
 ## Requirements
 
 - CMake
