@@ -62,7 +62,7 @@ Chip8::Chip8() : rand_gen(std::chrono::system_clock::now().time_since_epoch().co
     }
 
     // clear memory
-    for (int i = 0; i < MEMORY_SIZE; i++) {
+    for (unsigned int i = 0; i < MEMORY_SIZE; i++) {
         memory[i] = 0;
     }
 
