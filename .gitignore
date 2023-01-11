@@ -10,4 +10,5 @@ cmake
 build
 
 # Chip 8 Roms
+roms/
 *.ch8
