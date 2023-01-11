@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.24)
 project(chip8)
 
 set(CMAKE_CXX_STANDARD 17)
+set(SOURCES src/main.cpp src/Chip8.cpp src/Platform.cpp)
 
 include_directories(/opt/homebrew/include)
 
 find_library(SDL2_LIBRARY sdl2)
 
-add_executable(chip8 main.cpp Chip8.h Chip8.cpp Platform.h Platform.cpp)
+add_executable(chip8 ${SOURCES})
 
 target_compile_options(chip8 PRIVATE -Wall)
 target_link_libraries(chip8 PRIVATE ${SDL2_LIBRARY})
