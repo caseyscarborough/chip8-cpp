@@ -39,7 +39,7 @@ uint8_t fontset[FONTSET_SIZE] = {
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-Chip8::Chip8() : randGen(std::chrono::system_clock::now().time_since_epoch().count()) {
+Chip8::Chip8() : rand_gen(std::chrono::system_clock::now().time_since_epoch().count()) {
     // the first instruction executed will be at 0x200
     pc = START_ADDRESS;
     opcode = 0;
@@ -70,10 +70,10 @@ Chip8::Chip8() : randGen(std::chrono::system_clock::now().time_since_epoch().cou
 
     // Chip8 has an instruction which places a random number into a register.
     // this will initialize the RNG for the instruction.
-    randByte = std::uniform_int_distribution<uint8_t>(0, 255U);
+    rand_byte = std::uniform_int_distribution<uint8_t>(0, 255U);
 }
 
-bool Chip8::LoadRom(const char *filename) {
+bool Chip8::load_rom(const char *filename) {
     // Open the file as a stream of binary and move the file pointer to the end
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
@@ -101,7 +101,7 @@ bool Chip8::LoadRom(const char *filename) {
 }
 
 // Fetch, decode, and execute
-void Chip8::Cycle() {
+void Chip8::cycle() {
     // fetch the operation
     opcode = memory[pc] << 8 | memory[pc + 1];
 
@@ -241,13 +241,13 @@ void Chip8::Cycle() {
     }
 
     // decrement the delay timer if it's been set
-    if (delayTimer > 0) {
-        --delayTimer;
+    if (delay_timer > 0) {
+        --delay_timer;
     }
 
     // decrement the sound timer if it's been set
-    if (soundTimer > 0) {
-        --soundTimer;
+    if (sound_timer > 0) {
+        --sound_timer;
     }
 }
 
@@ -257,7 +257,7 @@ void Chip8::Cycle() {
 void Chip8::op_00E0() {
     // we can simply set the entire video buffer to zeroes.
     memset(video, 0, sizeof(video));
-    drawFlag = true;
+    draw_flag = true;
     pc += 2;
 }
 
@@ -465,7 +465,7 @@ void Chip8::op_Bnnn() {
 void Chip8::op_Cxkk() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
     uint8_t byte = opcode & 0x00FF;
-    registers[Vx] = randByte(randGen) & byte;
+    registers[Vx] = rand_byte(rand_gen) & byte;
     pc += 2;
 }
 
@@ -489,7 +489,7 @@ void Chip8::op_Dxyn() {
         }
     }
 
-    drawFlag = true;
+    draw_flag = true;
     pc += 2;
 }
 
@@ -518,7 +518,7 @@ void Chip8::op_ExA1() {
 // Set Vx = delay timer value
 void Chip8::op_Fx07() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
-    registers[Vx] = delayTimer;
+    registers[Vx] = delay_timer;
     pc += 2;
 }
 
@@ -538,14 +538,14 @@ void Chip8::op_Fx0A() {
 // Set delay timer = Vx
 void Chip8::op_Fx15() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
-    delayTimer = registers[Vx];
+    delay_timer = registers[Vx];
     pc += 2;
 }
 
 // Set sound timer = Vx
 void Chip8::op_Fx18() {
     uint8_t Vx = (opcode & 0x0F00) >> 8;
-    soundTimer = registers[Vx];
+    sound_timer = registers[Vx];
     pc += 2;
 }
 

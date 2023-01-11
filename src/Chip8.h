@@ -13,12 +13,13 @@ const int VIDEO_WIDTH = 64;
 class Chip8 {
 public:
     Chip8();
-    bool LoadRom(char const* filename);
-    void Cycle();
 
-    bool drawFlag;
-    uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{};
-    uint8_t keypad[KEY_COUNT]{};
+    bool load_rom(char const *filename);
+    void cycle();
+
+    bool draw_flag;
+    uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{}; // 64x32 monochrome display memory
+    uint8_t keypad[KEY_COUNT]{}; // 16 input keys 0-F
 private:
     uint8_t registers[REGISTER_COUNT]{}; // 16 8-bit registers
     uint8_t memory[MEMORY_SIZE]{};       // 4K bytes of memory
@@ -26,14 +27,12 @@ private:
     uint16_t pc{};                       // 16-bit program counter
     uint16_t stack[STACK_LEVELS]{};      // 16-level stack (can hold 16 program counters)
     uint8_t sp{};                        // 8-bit stack pointer
-    uint8_t delayTimer{};                // 8-bit delay timer
-    uint8_t soundTimer{};                // 8-bit sound timer
-    // 16 input keys 0-F
-    // 64x32 monochrome display memory
+    uint8_t delay_timer{};               // 8-bit delay timer
+    uint8_t sound_timer{};               // 8-bit sound timer
     uint16_t opcode;                     // 16-bit current instruction
 
-    std::default_random_engine randGen;
-    std::uniform_int_distribution<uint8_t> randByte;
+    std::default_random_engine rand_gen;
+    std::uniform_int_distribution<uint8_t> rand_byte;
 
     //region Instructions
 

@@ -9,8 +9,8 @@ class Platform
 public:
     Platform(char const* title, int windowWidth, int windowHeight);
     ~Platform();
-    void Update(const uint32_t buffer[]);
-    bool ProcessInput(uint8_t* keys);
+    void update(const uint32_t buffer[]);
+    bool process_input(uint8_t* keys);
     SDL_Renderer* renderer{};
     SDL_Texture* texture{};
     uint32_t pixels[VIDEO_WIDTH * VIDEO_HEIGHT]{};

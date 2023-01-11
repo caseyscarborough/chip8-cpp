@@ -61,7 +61,7 @@ Platform::~Platform() {
     SDL_Quit();
 }
 
-void Platform::Update(const uint32_t buffer[]) {
+void Platform::update(const uint32_t buffer[]) {
     // Store pixels in temporary buffer
     for (int i = 0; i < VIDEO_HEIGHT * VIDEO_WIDTH; ++i) {
         uint8_t pixel = buffer[i];
@@ -73,7 +73,7 @@ void Platform::Update(const uint32_t buffer[]) {
     SDL_RenderPresent(renderer);
 }
 
-bool Platform::ProcessInput(uint8_t *keys) {
+bool Platform::process_input(uint8_t *keys) {
     bool quit = false;
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
