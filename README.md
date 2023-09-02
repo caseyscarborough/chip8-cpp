@@ -18,6 +18,8 @@ brew install cmake make sdl2
 ## Building
 
 ```bash
+git clone --recurse-submodules https://github.com/caseyscarborough/chip8-cpp
+cd chip8-cpp
 mkdir build && cd build
 cmake .. && make
 ```
